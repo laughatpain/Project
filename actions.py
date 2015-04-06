@@ -339,7 +339,7 @@ def create_quake(world, pt, ticks, i_store):
 
 
 def schedule_quake(world, quake, ticks):
-   schedule_animation(world, quake, QUAKE_STEPS) 
+   schedule_animation(world, quake, QUAKE_STEPS)
    schedule_action(world, quake, create_entity_death_action(world, quake),
       ticks + QUAKE_DURATION)
 
