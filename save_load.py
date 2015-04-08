@@ -84,14 +84,14 @@ def add_background(world, properties, i_store):
    if len(properties) >= BGND_NUM_PROPERTIES:
       pt = point.Point(int(properties[BGND_COL]), int(properties[BGND_ROW]))
       name = properties[BGND_NAME]
-      worldmodel.set_background(world, pt,
+      world.set_background(pt,
          entities.Background(name, image_store.get_images(i_store, name)))
 
 
 def add_entity(world, properties, i_store, run):
    new_entity = create_from_properties(properties, i_store)
    if new_entity:
-      worldmodel.add_entity(world, new_entity)
+      world.add_entity(new_entity)
       if run:
          schedule_entity(world, new_entity, i_store)
 

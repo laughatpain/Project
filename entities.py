@@ -74,6 +74,11 @@ class MinerNotFull:
    def next_image(self):
       self.current_img = (self.current_img + 1) % len(self.imgs)
 
+   def entity_string(self):
+         return ' '.join(['miner', self.name, str(self.position.x),
+            str(self.position.y), str(self.resource_limit),
+            str(self.rate), str(self.animation_rate)])
+
 
 
 class MinerFull:
@@ -138,6 +143,11 @@ class MinerFull:
    def next_image(self):
       self.current_img = (self.current_img + 1) % len(self.imgs)
 
+   def entity_string(self):
+         return ' '.join(['miner', self.name, str(self.position.x),
+            str(self.position.y), str(self.resource_limit),
+            str(self.rate), str(self.animation_rate)])
+
 class Vein:
    def __init__(self, name, rate, position, imgs, resource_distance=1):
       self.name = name
@@ -188,6 +198,11 @@ class Vein:
    def next_image(self):
       self.current_img = (self.current_img + 1) % len(self.imgs)
 
+   def entity_string(self):
+         return ' '.join(['vein', self.name, str(self.position.x),
+            str(self.position.y), str(self.rate),
+            str(self.resource_distance)])
+
 
 
 
@@ -237,6 +252,12 @@ class Ore:
 
    def next_image(self):
       self.current_img = (self.current_img + 1) % len(self.imgs)
+
+   def entity_string(self):
+         return ' '.join(['ore', self.name, str(self.position.x),
+            str(self.position.y), str(self.rate)])
+
+
 
 
 
@@ -303,6 +324,10 @@ class Blacksmith:
    def next_image(self):
       self.current_img = (self.current_img + 1) % len(self.imgs)
 
+   def entity_string(self):
+         return ' '.join(['blacksmith', self.name, str(self.position.x),
+            str(self.position.y), str(self.resource_limit),
+            str(self.rate), str(self.resource_distance)])
 
 
 
@@ -327,6 +352,10 @@ class Obstacle:
 
    def next_image(self):
       self.current_img = (self.current_img + 1) % len(self.imgs)
+
+   def entity_string(self):
+         return ' '.join(['obstacle', self.name, str(self.position.x),
+            str(self.position.y)])
 
 
 class OreBlob:
@@ -379,6 +408,9 @@ class OreBlob:
    def next_image(self):
       self.current_img = (self.current_img + 1) % len(self.imgs)
 
+   def entity_string(self):
+         return ' '.join(['ore', self.name, str(self.position.x),
+            str(self.position.y), str(self.rate)])
 
 
 
@@ -428,6 +460,9 @@ class Quake:
    def next_image(self):
       self.current_img = (self.current_img + 1) % len(self.imgs)
 
+   def entity_string(self):
+      return 'unknown'
+
 
 
 
@@ -441,25 +476,5 @@ def get_image(entity):
 # This is a less than pleasant file format, but structured based on
 # material covered in course.  Something like JSON would be a
 # significant improvement.
-def entity_string(entity):
-   if isinstance(entity, MinerNotFull):
-      return ' '.join(['miner', entity.name, str(entity.position.x),
-         str(entity.position.y), str(entity.resource_limit),
-         str(entity.rate), str(entity.animation_rate)])
-   elif isinstance(entity, Vein):
-      return ' '.join(['vein', entity.name, str(entity.position.x),
-         str(entity.position.y), str(entity.rate),
-         str(entity.resource_distance)])
-   elif isinstance(entity, Ore):
-      return ' '.join(['ore', entity.name, str(entity.position.x),
-         str(entity.position.y), str(entity.rate)])
-   elif isinstance(entity, Blacksmith):
-      return ' '.join(['blacksmith', entity.name, str(entity.position.x),
-         str(entity.position.y), str(entity.resource_limit),
-         str(entity.rate), str(entity.resource_distance)])
-   elif isinstance(entity, Obstacle):
-      return ' '.join(['obstacle', entity.name, str(entity.position.x),
-         str(entity.position.y)])
-   else:
-      return 'unknown'
+
 
