@@ -79,6 +79,21 @@ class MinerNotFull:
             str(self.position.y), str(self.resource_limit),
             str(self.rate), str(self.animation_rate)])
 
+   def miner_to_ore(self, world, ore):
+      entity_pt = self.get_position()
+      if not ore:
+         return ([entity_pt], False)
+      ore_pt = ore.get_position()
+      if adjacent(entity_pt, ore_pt):
+         self.set_resource_count(
+            1 + self.get_resource_count())
+         world.remove_entity(ore)
+         return ([ore_pt], True)
+      else:
+         new_pt = world.next_position(entity_pt, ore_pt)
+         return (world.move_entity(self, new_pt), False)
+
+
 
 
 class MinerFull:
@@ -147,6 +162,23 @@ class MinerFull:
          return ' '.join(['miner', self.name, str(self.position.x),
             str(self.position.y), str(self.resource_limit),
             str(self.rate), str(self.animation_rate)])
+
+   def miner_to_smith(self, world, smith):
+      entity_pt = self.get_position()
+      if not smith:
+         return ([entity_pt], False)
+      smith_pt = smith.get_position()
+      if adjacent(entity_pt, smith_pt):
+         smith.set_resource_count(
+            smith.get_resource_count() +
+            self.get_resource_count())
+         self.set_resource_count(0)
+         return ([], True)
+      else:
+         new_pt = world.next_position(entity_pt, smith_pt)
+         return (world.move_entity(self, new_pt), False)
+
+
 
 class Vein:
    def __init__(self, name, rate, position, imgs, resource_distance=1):
@@ -414,6 +446,8 @@ class OreBlob:
 
 
 
+
+
 class Quake:
    def __init__(self, name, position, imgs, animation_rate):
       self.name = name
@@ -470,6 +504,21 @@ class Quake:
 
 def get_image(entity):
    return entity.imgs[entity.current_img]
+
+def sign(x):
+   if x < 0:
+      return -1
+   elif x > 0:
+      return 1
+   else:
+      return 0
+
+
+def adjacent(pt1, pt2):
+   return ((pt1.x == pt2.x and abs(pt1.y - pt2.y) == 1) or
+      (pt1.y == pt2.y and abs(pt1.x - pt2.x) == 1))
+
+
 
 
 

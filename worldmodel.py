@@ -1,7 +1,7 @@
 import entities
 import pygame
 import ordered_list
-from actions import*
+from actions import *
 from occ_grid import *
 import point
 
@@ -115,23 +115,6 @@ class WorldModel:
 
       return new_pt
 
-   def blob_next_position(self, entity_pt, dest_pt):
-      horiz = sign(dest_pt.x - entity_pt.x)
-      new_pt = point.Point(entity_pt.x + horiz, entity_pt.y)
-
-      if horiz == 0 or (self.is_occupied(new_pt) and
-         not isinstance(self.get_tile_occupant(new_pt),
-         Ore)):
-         vert = sign(dest_pt.y - entity_pt.y)
-         new_pt = point.Point(entity_pt.x, entity_pt.y + vert)
-
-         if vert == 0 or (self.is_occupied(new_pt) and
-            not isinstance(self.get_tile_occupant(new_pt),
-            Ore)):
-            new_pt = point.Point(entity_pt.x, entity_pt.y)
-
-      return new_pt
-
 
 
 
@@ -153,17 +136,3 @@ def nearest_entity(entity_dists):
 
 def distance_sq(p1, p2):
    return (p1.x - p2.x)**2 + (p1.y - p2.y)**2
-
-
-
-
-
-
-
-
-
-
-
-
-
-
