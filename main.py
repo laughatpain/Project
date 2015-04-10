@@ -8,6 +8,8 @@ import sys
 import worldmodel
 import worldview
 
+
+
 RUN_AFTER_LOAD = True
 
 IMAGE_LIST_FILE_NAME = 'imagelist'
@@ -28,7 +30,7 @@ def create_default_background(img):
 
 def load_world(world, i_store, filename):
    with open(filename, 'r') as file:
-      save_load.load_world(world, i_store, file, RUN_AFTER_LOAD)
+      world.load_world(i_store, file, RUN_AFTER_LOAD)
 
 
 def main():

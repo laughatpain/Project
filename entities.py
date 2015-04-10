@@ -12,6 +12,10 @@ class Background:
    def next_image(self):
       self.current_img = (self.current_img + 1) % len(self.imgs)
 
+   def get_image(self):
+      return self.imgs[self.current_img]
+
+
 class MinerNotFull:
    def __init__(self, name, resource_limit, position, rate, imgs,
       animation_rate):
@@ -93,6 +97,9 @@ class MinerNotFull:
          new_pt = world.next_position(entity_pt, ore_pt)
          return (world.move_entity(self, new_pt), False)
 
+   def get_image(self):
+      return self.imgs[self.current_img]
+
 
 
 
@@ -144,7 +151,6 @@ class MinerFull:
       if hasattr(self, "pending_actions"):
          self.pending_actions.append(action)
 
-
    def get_pending_actions(self):
       if hasattr(self, "pending_actions"):
          return self.pending_actions
@@ -178,6 +184,8 @@ class MinerFull:
          new_pt = world.next_position(entity_pt, smith_pt)
          return (world.move_entity(self, new_pt), False)
 
+   def get_image(self):
+      return self.imgs[self.current_img]
 
 
 class Vein:
@@ -235,6 +243,8 @@ class Vein:
             str(self.position.y), str(self.rate),
             str(self.resource_distance)])
 
+   def get_image(self):
+      return self.imgs[self.current_img]
 
 
 
@@ -289,6 +299,8 @@ class Ore:
          return ' '.join(['ore', self.name, str(self.position.x),
             str(self.position.y), str(self.rate)])
 
+   def get_image(self):
+      return self.imgs[self.current_img]
 
 
 
@@ -361,6 +373,9 @@ class Blacksmith:
             str(self.position.y), str(self.resource_limit),
             str(self.rate), str(self.resource_distance)])
 
+   def get_image(self):
+      return self.imgs[self.current_img]
+
 
 
 class Obstacle:
@@ -388,6 +403,9 @@ class Obstacle:
    def entity_string(self):
          return ' '.join(['obstacle', self.name, str(self.position.x),
             str(self.position.y)])
+
+   def get_image(self):
+      return self.imgs[self.current_img]
 
 
 class OreBlob:
@@ -444,6 +462,26 @@ class OreBlob:
          return ' '.join(['ore', self.name, str(self.position.x),
             str(self.position.y), str(self.rate)])
 
+   def blob_to_vein(self, world, vein):
+      entity_pt = self.get_position()
+      if not vein:
+         return ([entity_pt], False)
+      vein_pt = vein.get_position()
+      if adjacent(entity_pt, vein_pt):
+         world.remove_entity(vein)
+         return ([vein_pt], True)
+      else:
+         new_pt = world.blob_next_position(entity_pt, vein_pt)
+         old_entity = world.get_tile_occupant(new_pt)
+         if isinstance(old_entity, Ore):
+            world.remove_entity(old_entity)
+         return (world.move_entity(self, new_pt), False)
+
+   def get_image(self):
+      return self.imgs[self.current_img]
+
+
+
 
 
 
@@ -497,8 +535,8 @@ class Quake:
    def entity_string(self):
       return 'unknown'
 
-
-
+   def get_image(self):
+      return self.imgs[self.current_img]
 
 
 

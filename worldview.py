@@ -37,7 +37,7 @@ class WorldView:
       for entity in self.world.entities:
          if self.viewport.collidepoint(entity.position.x, entity.position.y):
             v_pt = world_to_viewport(self.viewport, entity.position)
-            self.screen.blit(entities.get_image(entity),
+            self.screen.blit(entity.get_image(),
                (v_pt.x * self.tile_width, v_pt.y * self.tile_height))
 
 
@@ -84,7 +84,7 @@ class WorldView:
       if occupant:
          img = pygame.Surface((self.tile_width, self.tile_height))
          img.blit(bgnd, (0, 0))
-         img.blit(entities.get_image(occupant), (0,0))
+         img.blit(get_image(occupant), (0,0))
          return img
       else:
          return bgnd
@@ -164,6 +164,45 @@ class WorldView:
          image_store.get_images(i_store, entity_select)[0])
 
       return entity_select
+
+   def activity_loop_2(self, world, i_store):
+      pygame.key.set_repeat(keys.KEY_DELAY, keys.KEY_INTERVAL)
+
+      entity_select = None
+      while 1:
+         for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+               return
+            elif event.type == pygame.MOUSEMOTION:
+               self.handle_mouse_motion(event)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+               tiles = self.handle_mouse_button(world, event, entity_select,
+                  i_store)
+               self.update_view_tiles(tiles)
+            elif event.type == pygame.KEYDOWN:
+               entity_select = self.handle_keydown_2(event, i_store, world,
+                  entity_select)
+
+   def handle_mouse_button(self, world, event, entity_select, i_store):
+      mouse_pt = mouse_to_tile(event.pos, self.tile_width, self.tile_height)
+      tile_view_pt = worldview.viewport_to_world(self.viewport, mouse_pt)
+      if event.button == mouse_buttons.LEFT and entity_select:
+         if is_background_tile(entity_select):
+            worldmodel.set_background(world, tile_view_pt,
+               entities.Background(entity_select,
+                  image_store.get_images(i_store, entity_select)))
+            return [tile_view_pt]
+         else:
+            new_entity = create_new_entity(tile_view_pt, entity_select, i_store)
+            if new_entity:
+               worldmodel.remove_entity_at(world, tile_view_pt)
+               worldmodel.add_entity(world, new_entity)
+               return [tile_view_pt]
+      elif event.button == mouse_buttons.RIGHT:
+         worldmodel.remove_entity_at(world, tile_view_pt)
+         return [tile_view_pt]
+
+      return []
 
 
 
