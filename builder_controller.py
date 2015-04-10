@@ -43,7 +43,7 @@ def load_world(world, i_store, filename):
       save_load.load_world(world, i_store, file)
 
 
-def on_keydown(event, world, entity_select, i_store):
+def on_keydown_2(event, world, entity_select, i_store):
    x_delta = 0
    y_delta = 0
    if event.key == pygame.K_UP: y_delta -= 1
@@ -58,18 +58,10 @@ def on_keydown(event, world, entity_select, i_store):
    return ((x_delta, y_delta), entity_select)
 
 
-def handle_mouse_motion(view, event):
-   mouse_pt = mouse_to_tile(event.pos, view.tile_width, view.tile_height)
-   worldview.mouse_move(view, mouse_pt)
 
 
-def handle_keydown(view, event, i_store, world, entity_select):
-   (view_delta, entity_select) = on_keydown(event, world,
-      entity_select, i_store)
-   worldview.update_view(view, view_delta,
-      image_store.get_images(i_store, entity_select)[0])
 
-   return entity_select
+
 
 
 def create_new_entity(pt, entity_select, i_store):
@@ -136,6 +128,6 @@ def activity_loop(view, world, i_store):
                i_store)
             worldview.update_view_tiles(view, tiles)
          elif event.type == pygame.KEYDOWN:
-            entity_select = handle_keydown(view, event, i_store, world,
+            entity_select = handle_keydown_2(view, event, i_store, world,
                entity_select)
 

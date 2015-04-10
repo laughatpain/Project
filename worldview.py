@@ -2,10 +2,14 @@ import pygame
 from worldmodel import *
 import entities
 import point
+from controller import *
+from builder_controller import *
 
 MOUSE_HOVER_ALPHA = 120
 MOUSE_HOVER_EMPTY_COLOR = (0, 255, 0)
 MOUSE_HOVER_OCC_COLOR = (255, 0, 0)
+
+
 
 class WorldView:
    def __init__(self, view_cols, view_rows, screen, world, tile_width,
@@ -119,6 +123,49 @@ class WorldView:
 
       pygame.display.update(rects)
 
+   def handle_timer_event(self, world):
+      rects = world.update_on_time(pygame.time.get_ticks())
+      self.update_view_tiles(rects)
+
+
+   def handle_mouse_motion(self, event):
+      mouse_pt = mouse_to_tile(event.pos, self.tile_width, self.tile_height)
+      self.mouse_move(mouse_pt)
+
+
+   def handle_keydown(self, event):
+      view_delta = on_keydown(event)
+      self.update_view(view_delta)
+
+
+   def activity_loop(self, world):
+      pygame.key.set_repeat(KEY_DELAY, KEY_INTERVAL)
+      pygame.time.set_timer(pygame.USEREVENT, TIMER_FREQUENCY)
+
+      while 1:
+         for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+               return
+            elif event.type == pygame.USEREVENT:
+               self.handle_timer_event(world)
+            elif event.type == pygame.MOUSEMOTION:
+               self.handle_mouse_motion(event)
+            elif event.type == pygame.KEYDOWN:
+               self.handle_keydown(event)
+
+   def handle_mouse_motion(self, event):
+      mouse_pt = mouse_to_tile(event.pos, self.tile_width, self.tile_height)
+      self.mouse_move(mouse_pt)
+
+   def handle_keydown_2(self, event, i_store, world, entity_select):
+      (view_delta, entity_select) = on_keydown_2(event, world,
+         entity_select, i_store)
+      self.update_view(view_delta,
+         image_store.get_images(i_store, entity_select)[0])
+
+      return entity_select
+
+
 
 def viewport_to_world(viewport, pt):
    return point.Point(pt.x + viewport.left, pt.y + viewport.top)
@@ -137,6 +184,8 @@ def create_shifted_viewport(viewport, delta, num_rows, num_cols):
    new_y = clamp(viewport.top + delta[1], 0, num_rows - viewport.height)
 
    return pygame.Rect(new_x, new_y, viewport.width, viewport.height)
+
+
 
 
 

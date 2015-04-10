@@ -23,7 +23,7 @@ TILE_HEIGHT = 32
 
 
 def create_default_background(img):
-   return entities.Background(image_store.DEFAULT_IMAGE_NAME, img)
+      return entities.Background(image_store.DEFAULT_IMAGE_NAME, img)
 
 
 def load_world(world, i_store, filename):
@@ -48,12 +48,20 @@ def main():
    view = worldview.WorldView(SCREEN_WIDTH // TILE_WIDTH,
       SCREEN_HEIGHT // TILE_HEIGHT, screen, world, TILE_WIDTH, TILE_HEIGHT)
 
+
    load_world(world, i_store, WORLD_FILE)
 
    view.update_view()
 
-   controller.activity_loop(view, world)
+   view.activity_loop(world)
+
 
 
 if __name__ == '__main__':
    main()
+
+
+
+
+
+
