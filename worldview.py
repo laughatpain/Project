@@ -165,23 +165,7 @@ class WorldView:
 
       return entity_select
 
-   def activity_loop_2(self, world, i_store):
-      pygame.key.set_repeat(keys.KEY_DELAY, keys.KEY_INTERVAL)
 
-      entity_select = None
-      while 1:
-         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-               return
-            elif event.type == pygame.MOUSEMOTION:
-               self.handle_mouse_motion(event)
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-               tiles = self.handle_mouse_button(world, event, entity_select,
-                  i_store)
-               self.update_view_tiles(tiles)
-            elif event.type == pygame.KEYDOWN:
-               entity_select = self.handle_keydown_2(event, i_store, world,
-                  entity_select)
 
    def handle_mouse_button(self, world, event, entity_select, i_store):
       mouse_pt = mouse_to_tile(event.pos, self.tile_width, self.tile_height)
