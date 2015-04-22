@@ -8,8 +8,6 @@ import sys
 import worldmodel
 import worldview
 
-
-
 RUN_AFTER_LOAD = True
 
 IMAGE_LIST_FILE_NAME = 'imagelist'
@@ -25,12 +23,12 @@ TILE_HEIGHT = 32
 
 
 def create_default_background(img):
-      return entities.Background(image_store.DEFAULT_IMAGE_NAME, img)
+   return entities.Background(image_store.DEFAULT_IMAGE_NAME, img)
 
 
 def load_world(world, i_store, filename):
    with open(filename, 'r') as file:
-      world.load_world(i_store, file, RUN_AFTER_LOAD)
+      save_load.load_world(world, i_store, file, RUN_AFTER_LOAD)
 
 
 def main():
@@ -50,20 +48,12 @@ def main():
    view = worldview.WorldView(SCREEN_WIDTH // TILE_WIDTH,
       SCREEN_HEIGHT // TILE_HEIGHT, screen, world, TILE_WIDTH, TILE_HEIGHT)
 
-
    load_world(world, i_store, WORLD_FILE)
 
    view.update_view()
 
-   view.activity_loop(world)
-
+   controller.activity_loop(view, world)
 
 
 if __name__ == '__main__':
    main()
-
-
-
-
-
-

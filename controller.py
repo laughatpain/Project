@@ -1,4 +1,5 @@
 import pygame
+import worldview
 import worldmodel
 import point
 
@@ -21,24 +22,34 @@ def on_keydown(event):
 def mouse_to_tile(pos, tile_width, tile_height):
    return point.Point(pos[0] // tile_width, pos[1] // tile_height)
 
-def activity_loop(view, world, i_store):
-   pygame.key.set_repeat(keys.KEY_DELAY, keys.KEY_INTERVAL)
 
-   entity_select = None
+def handle_timer_event(world, view):
+   rects = world.update_on_time(pygame.time.get_ticks())
+   view.update_view_tiles(rects)
+
+
+def handle_mouse_motion(view, event):
+   mouse_pt = mouse_to_tile(event.pos, view.tile_width, view.tile_height)
+   view.mouse_move(mouse_pt)
+
+
+def handle_keydown(view, event):
+   view_delta = on_keydown(event)
+   view.update_view(view_delta)
+
+
+def activity_loop(view, world):
+   pygame.key.set_repeat(KEY_DELAY, KEY_INTERVAL)
+   pygame.time.set_timer(pygame.USEREVENT, TIMER_FREQUENCY)
+
    while 1:
       for event in pygame.event.get():
          if event.type == pygame.QUIT:
             return
+         elif event.type == pygame.USEREVENT:
+            handle_timer_event(world, view)
          elif event.type == pygame.MOUSEMOTION:
-            view.handle_mouse_motion(event)
-         elif event.type == pygame.MOUSEBUTTONDOWN:
-            tiles = view.handle_mouse_button(world, event, entity_select,
-               i_store)
-            view.update_view_tiles(tiles)
+            handle_mouse_motion(view, event)
          elif event.type == pygame.KEYDOWN:
-            entity_select = view.handle_keydown_2(event, i_store, world,
-               entity_select)
-
-
-
+            handle_keydown(view, event)
 
